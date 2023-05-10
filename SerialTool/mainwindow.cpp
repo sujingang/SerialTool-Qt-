@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "serialtool.h"
+#include "sn_model.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -7,6 +7,21 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    setWindowTitle("SerialTool");
+
+    //....创建线程对象.......
+    pSnThread=new snThread(this);
+
+    //...调用run函数...每隔1s发送一个信号...
+    pSnThread->start();
+
+    connect(pSnThread,SIGNAL(returnSnSignal(QString)),this,SLOT(getSnSlot(QString)));
+    connect(this,SIGNAL(createSnSignal(QString, QString, unsigned long, unsigned long, unsigned int, unsigned int, unsigned int)),
+            pSnThread,SLOT(createSnSlot(QString, QString, unsigned long, unsigned long, unsigned int, unsigned int, unsigned int)));
+
+    //关闭窗口的时候结束线程
+    connect(this,SIGNAL(destroyed()),this,SLOT(quitThreadSlot()));
 }
 
 MainWindow::~MainWindow()
@@ -14,10 +29,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::getSnSlot(QString result)
+{
+    ui->sn_result->append(result);
+}
+
+//线程结束函数
+void MainWindow::quitThreadSlot()
+{
+    pSnThread->quit();
+    pSnThread->wait();
+}
 
 void MainWindow::on_sn_create_clicked()
 {
-    QString s_result = "";
     ui->sn_result->clear();
 
     bool isError = false;
@@ -57,7 +82,7 @@ void MainWindow::on_sn_create_clicked()
     unsigned long i_sn_quantity = s_sn_quantity.toULong();
     unsigned int i_sn_step = s_sn_step.toUInt();
     unsigned long i = 0;
-    unsigned long i_sn = 0;
+    unsigned long i_sn = i_sn_start;
     unsigned long i_sn_base = 10;
 
     if(ui->sn_base->currentIndex() == 0)
@@ -80,30 +105,9 @@ void MainWindow::on_sn_create_clicked()
         return;
     }
 
+    emit createSnSignal(s_sn_prefix, s_sn_suffix, i_sn_start, i_mid_len, i_sn_quantity, i_sn_step, i_sn_base);
+
 //    s_result.sprintf("i_sn_start=%.*d\ni_sn_quantity=%d\ni_sn_step=%d\ni_sn_base=%d\n", i_sn_len - (i_prefix_len + i_suffix_len), i_sn_start, i_sn_quantity, i_sn_step, i_sn_base);
-
-    for(i = 0; i < i_sn_quantity; i++)
-    {
-        i_sn = i_sn_start + i*i_sn_step;
-        s_sn_tmp = QString::number(i_sn, i_sn_base);
-        if(s_sn_tmp.length() > i_mid_len)
-        {
-            ui->sn_result->append("已超出范围！！\n");
-            return;
-        }
-        if(i_sn_base == 10)
-        {
-            s_sn.sprintf("%.*d", i_mid_len, i_sn);
-        }
-        else if(i_sn_base == 16)
-        {
-            s_sn.sprintf("%.*X", i_mid_len, i_sn);
-        }
-
-        s_result.append(s_sn_prefix + s_sn + s_sn_suffix + "\n");
-    }
-
-    ui->sn_result->append(s_result);
 }
 
 void MainWindow::on_mac_create_clicked()
@@ -193,8 +197,6 @@ void MainWindow::on_mac_create_clicked()
 
         s_result.append(s_sn_prefix + s_sn + s_sn_suffix + "\n");
     }
-
-    ui->sn_result->append(s_result);
 }
 
 void MainWindow::on_str_create_clicked()

@@ -23,8 +23,10 @@ SOURCES += \
     str_model.cpp
 
 HEADERS += \
+    mac_model.h \
     mainwindow.h \
-    serialtool.h
+    sn_model.h \
+    str_model.h
 
 FORMS += \
     mainwindow.ui
