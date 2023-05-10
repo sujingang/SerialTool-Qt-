@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <windows.h>
 #include "sn_model.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,12 +30,13 @@ private slots:
     void on_str_create_clicked();
 signals:
     //自定义信号
-    void  createSnSignal(QString prefix, QString suffix, unsigned long mid, unsigned long i_mid_len, unsigned int i_quantity, unsigned int i_step, unsigned int i_base);
+    void  createSnSignal(SN_CREATE_PARAM createParamr);
 
 private:
     Ui::MainWindow *ui;
 
     //...线程对象....
     snThread *pSnThread;
+    SN_CREATE_PARAM snCreateParam;
 };
 #endif // MAINWINDOW_H

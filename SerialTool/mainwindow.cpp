@@ -11,14 +11,13 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("SerialTool");
 
     //....创建线程对象.......
-    pSnThread=new snThread(this);
+    pSnThread = new snThread(this);
 
-    //...调用run函数...每隔1s发送一个信号...
+    //...调用run函数
     pSnThread->start();
 
-    connect(pSnThread,SIGNAL(returnSnSignal(QString)),this,SLOT(getSnSlot(QString)));
-    connect(this,SIGNAL(createSnSignal(QString, QString, unsigned long, unsigned long, unsigned int, unsigned int, unsigned int)),
-            pSnThread,SLOT(createSnSlot(QString, QString, unsigned long, unsigned long, unsigned int, unsigned int, unsigned int)));
+    connect(pSnThread,SIGNAL(returnSnSignal(QString)), this,SLOT(getSnSlot(QString)));
+    connect(this,SIGNAL(createSnSignal(SN_CREATE_PARAM)), pSnThread,SLOT(createSnSlot(SN_CREATE_PARAM)));
 
     //关闭窗口的时候结束线程
     connect(this,SIGNAL(destroyed()),this,SLOT(quitThreadSlot()));
@@ -31,7 +30,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::getSnSlot(QString result)
 {
-    ui->sn_result->append(result);
+    ui->sn_result->insertPlainText(result);
 }
 
 //线程结束函数
@@ -39,6 +38,7 @@ void MainWindow::quitThreadSlot()
 {
     pSnThread->quit();
     pSnThread->wait();
+    pSnThread->deleteLater();
 }
 
 void MainWindow::on_sn_create_clicked()
@@ -78,11 +78,11 @@ void MainWindow::on_sn_create_clicked()
     }
 
     unsigned long i_mid_len = i_sn_len - (i_prefix_len + i_suffix_len);
-    unsigned long i_sn_start = s_sn_start.mid(i_prefix_len, i_mid_len).toULong();
+    unsigned long i_mid_start = s_sn_start.mid(i_prefix_len, i_mid_len).toULong();
     unsigned long i_sn_quantity = s_sn_quantity.toULong();
     unsigned int i_sn_step = s_sn_step.toUInt();
     unsigned long i = 0;
-    unsigned long i_sn = i_sn_start;
+    unsigned long i_sn = i_mid_start;
     unsigned long i_sn_base = 10;
 
     if(ui->sn_base->currentIndex() == 0)
@@ -105,9 +105,17 @@ void MainWindow::on_sn_create_clicked()
         return;
     }
 
-    emit createSnSignal(s_sn_prefix, s_sn_suffix, i_sn_start, i_mid_len, i_sn_quantity, i_sn_step, i_sn_base);
+    snCreateParam.prefix = s_sn_prefix;
+    snCreateParam.suffix = s_sn_suffix;
+    snCreateParam.i_mid_start = i_mid_start;
+    snCreateParam.i_mid_len = i_mid_len;
+    snCreateParam.i_quantity = i_sn_quantity;
+    snCreateParam.i_step = i_sn_step;
+    snCreateParam.i_base = i_sn_base;
 
-//    s_result.sprintf("i_sn_start=%.*d\ni_sn_quantity=%d\ni_sn_step=%d\ni_sn_base=%d\n", i_sn_len - (i_prefix_len + i_suffix_len), i_sn_start, i_sn_quantity, i_sn_step, i_sn_base);
+    emit createSnSignal(snCreateParam);
+
+//    s_result.sprintf("i_mid_start=%.*d\ni_sn_quantity=%d\ni_sn_step=%d\ni_sn_base=%d\n", i_sn_len - (i_prefix_len + i_suffix_len), i_mid_start, i_sn_quantity, i_sn_step, i_sn_base);
 }
 
 void MainWindow::on_mac_create_clicked()
