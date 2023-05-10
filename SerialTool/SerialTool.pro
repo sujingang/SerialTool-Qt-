@@ -16,11 +16,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    mac_model.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    sn_model.cpp \
+    str_model.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    serialtool.h
 
 FORMS += \
     mainwindow.ui
