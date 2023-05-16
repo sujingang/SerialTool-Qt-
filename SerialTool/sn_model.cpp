@@ -52,12 +52,6 @@ void snThread::snCreate()
         }
 
         s_result.append(snCreateParam.prefix + s_sn + snCreateParam.suffix + "\n");
-
-//        if((i + 1) % 10 == 0)
-//        {
-//            emit returnSnSignal(s_result);
-//            s_result = "";
-//        }
     }
 
     emit returnSnSignal(s_result);

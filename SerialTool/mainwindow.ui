@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>749</width>
+    <width>554</width>
     <height>727</height>
    </rect>
   </property>
@@ -183,7 +183,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="mac_start"/>
+               <widget class="QLineEdit" name="mac_start">
+                <property name="text">
+                 <string>34:AC:11:F8:78:01</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -375,7 +379,7 @@
               <item>
                <widget class="QLineEdit" name="str_quantity">
                 <property name="text">
-                 <string>1</string>
+                 <string>10</string>
                 </property>
                </widget>
               </item>
@@ -391,6 +395,85 @@
                 <property name="text">
                  <string>4</string>
                 </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="str_type">
+                <item>
+                 <property name="text">
+                  <string>纯数字</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>小写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>大写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>大小写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>纯字符</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>数字+小写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>数字+大写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>数字+大小写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>数字+字符</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>字符+小写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>字符+大写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>字符+大小写字母</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>数字+小写字母+字符</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>数字+大写字母+字符</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>数字+大小写字母+字符</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item>
@@ -416,7 +499,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QTextBrowser" name="textBrowser_3"/>
+             <widget class="QTextBrowser" name="str_result"/>
             </item>
            </layout>
           </item>
@@ -455,17 +538,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>749</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
