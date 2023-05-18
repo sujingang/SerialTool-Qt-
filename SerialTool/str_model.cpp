@@ -151,7 +151,7 @@ QString strThread::getRanString(unsigned int len)
 //    s_str.fill('#', len);
 
     QList<unsigned int> list_src_index;
-    QList<unsigned int> list_char_index;
+    QList<unsigned int> list_char_index[5];
     QList<unsigned int> list_pos_index;
     unsigned int src_index = 0;
     unsigned int src_loop_cnt = len / type_cnt;
@@ -175,13 +175,18 @@ QString strThread::getRanString(unsigned int len)
 //            qDebug() << "src_index:" << src_index;
             list_src_index.append(src_index);
         }
+
+        if(list_char_index[src_index].size() >= str_source[src_index].length())
+        {
+            list_char_index[src_index].clear();
+        }
         do
         {
 //            qDebug() << "char_index:";
             char_index = getRandom(0, str_source[src_index].length() - 1);
-        }while(!checkIndex(list_char_index, char_index));
+        }while(!checkIndex(list_char_index[src_index], char_index));
 //        qDebug() << "char_index:" << char_index;
-        list_char_index.append(char_index);
+        list_char_index[src_index].append(char_index);
 
         do
         {
@@ -253,7 +258,7 @@ void strThread::strCreate()
 
     for(i = 0; i < strCreateParam.i_quantity; i++)
     {
-//        qDebug() << "count:" << i + 1;
+        qDebug() << "count:" << i + 1;
         s_result.append(strCreateParam.prefix + getRanString(strCreateParam.i_len) + strCreateParam.suffix + "\n");
     }
 
